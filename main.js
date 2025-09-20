@@ -531,7 +531,24 @@ const UIController = {
                             ErrorHandler.logError(new Error('Empty category text'), 'UIController.bindCategoryEvents');
                             return;
                         }
+                        
+                        // Home 버튼 클릭 시 전체 뉴스 로드
+                        if (category.toLowerCase() === 'home') {
+                            // 활성화된 카테고리 버튼 업데이트
+                            this.setActiveCategoryButton(category);
+                            NewsApp.loadLatestNews({
+                                page: 1,
+                                pageSize: NewsApp.pageSize
+                            });
+                            this.closeSideMenu();
+                            return;
+                        }
+                        
                         const mappedCategory = CONFIG.CATEGORY_MAP[category] || category.toLowerCase();
+                        
+                        // 활성화된 카테고리 버튼 업데이트
+                        this.setActiveCategoryButton(category);
+                        
                         NewsApp.loadNewsByCategory(mappedCategory);
                         this.closeSideMenu();
                     } catch (error) {
@@ -623,6 +640,7 @@ const UIController = {
                 const keyword = searchInput.value.trim();
                 if (keyword) {
                     NewsApp.performSearch(keyword);
+                    searchInput.value = ''; // 검색 후 입력란 초기화
                     this.closeSearchModal();
                 } else {
                     ErrorHandler.logError(new Error('Empty search keyword'), 'UIController.performSearch');
@@ -630,6 +648,34 @@ const UIController = {
             }
         } catch (error) {
             ErrorHandler.logError(error, 'UIController.performSearch');
+        }
+    },
+
+    // 카테고리 버튼 활성화 상태 관리
+    setActiveCategoryButton(categoryText) {
+        try {
+            // 모든 카테고리 버튼에서 active 클래스 제거
+            this.clearActiveCategoryButtons();
+            
+            // 해당 카테고리 버튼에 active 클래스 추가
+            this.elements.categoryBtns.forEach(btn => {
+                if (btn.textContent?.trim() === categoryText) {
+                    btn.classList.add('active');
+                }
+            });
+        } catch (error) {
+            ErrorHandler.logError(error, 'UIController.setActiveCategoryButton');
+        }
+    },
+
+    clearActiveCategoryButtons() {
+        try {
+            // 모든 카테고리 버튼에서 active 클래스 제거
+            this.elements.categoryBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+        } catch (error) {
+            ErrorHandler.logError(error, 'UIController.clearActiveCategoryButtons');
         }
     }
 };
@@ -641,6 +687,8 @@ const NewsApp = {
     page: 1,
     pageSize: 10,
     groupSize: 5,
+    currentCategory: null,  // 현재 선택된 카테고리
+    currentSearchKeyword: null,  // 현재 검색어
 
     async init() {
         try {
@@ -660,6 +708,16 @@ const NewsApp = {
             // 입력 검증
             if (options && typeof options !== 'object') {
                 throw new Error('Invalid options parameter');
+            }
+
+            // 상태 초기화
+            this.currentCategory = null;
+            this.currentSearchKeyword = null;
+            
+            // Home 버튼 활성화 (카테고리 버튼이 초기화된 후)
+            if (UIController.elements.categoryBtns) {
+                UIController.clearActiveCategoryButtons();
+                UIController.setActiveCategoryButton('Home');
             }
 
             const response = await NewsAPI.getLatestNews(options);
@@ -690,6 +748,14 @@ const NewsApp = {
             
             if (!trimmedKeyword) {
                 this.page = 1; // 페이지 리셋
+                this.currentCategory = null; // 카테고리 초기화
+                this.currentSearchKeyword = null; // 검색어 초기화
+                
+                // 카테고리 버튼 활성화 상태 초기화
+                if (UIController.elements.categoryBtns) {
+                    UIController.clearActiveCategoryButtons();
+                }
+                
                 await this.loadLatestNews({
                     page: this.page,
                     pageSize: this.pageSize
@@ -709,6 +775,14 @@ const NewsApp = {
             }
             
             this.page = 1; // 검색 시 페이지 리셋
+            this.currentCategory = null; // 카테고리 초기화
+            this.currentSearchKeyword = trimmedKeyword; // 현재 검색어 저장
+            
+            // 카테고리 버튼 활성화 상태 초기화
+            if (UIController.elements.categoryBtns) {
+                UIController.clearActiveCategoryButtons();
+            }
+            
             const response = await NewsAPI.getNewsBySearch(trimmedKeyword);
             
             if (!response || typeof response !== 'object') {
@@ -745,6 +819,9 @@ const NewsApp = {
             }
 
             this.page = 1; // 카테고리 선택 시 페이지 리셋
+            this.currentCategory = trimmedCategory; // 현재 카테고리 저장
+            this.currentSearchKeyword = null; // 검색어 초기화
+            
             const response = await NewsAPI.getNewsByCategory(trimmedCategory);
             
             if (!response || typeof response !== 'object') {
@@ -803,7 +880,29 @@ const NewsApp = {
                 ...options
             };
 
-            const response = await NewsAPI.getLatestNews(requestOptions);
+            let response;
+            
+            // 현재 상태에 따라 적절한 API 호출
+            if (this.currentSearchKeyword) {
+                // 검색 모드인 경우 - 페이지네이션도 지원
+                const searchUrl = NewsAPI.makeUrl({
+                    q: this.currentSearchKeyword,
+                    page: this.page,
+                    pageSize: this.pageSize
+                });
+                response = await NewsAPI.getNews(searchUrl);
+            } else if (this.currentCategory) {
+                // 카테고리 모드인 경우
+                const categoryUrl = NewsAPI.makeUrl({
+                    category: this.currentCategory,
+                    page: this.page,
+                    pageSize: this.pageSize
+                });
+                response = await NewsAPI.getNews(categoryUrl);
+            } else {
+                // 일반 뉴스 모드인 경우
+                response = await NewsAPI.getLatestNews(requestOptions);
+            }
             
             if (!response || typeof response !== 'object') {
                 throw new Error('Invalid news data received');

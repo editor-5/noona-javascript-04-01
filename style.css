@@ -40,10 +40,23 @@
     background: none;
     border: none;
     margin: 5px;
+    transition: background-color 0.3s ease;
 } 
 
 .menus button:hover {
     background-color: beige;
+}
+
+.menus button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.menus button.active:hover {
+    background-color: #0056b3;
 }
 .news-img-size {
     max-width: 100%;
@@ -133,6 +146,19 @@
     z-index: 2001 !important;
     opacity: 1 !important;
     visibility: visible !important;
+    transition: background-color 0.3s ease;
+}
+
+.side-menus button.active {
+    background: #007bff !important;
+    color: white !important;
+    font-weight: bold;
+    border-color: #007bff !important;
+}
+
+.side-menus button.active:hover {
+    background: #0056b3 !important;
+    border-color: #0056b3 !important;
 }
 .search-icon {
     background: none;

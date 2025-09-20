@@ -1,0 +1,316 @@
+/* 검색 버튼 스타일 */
+.search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    margin-left: auto;
+}
+
+.no-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 250px;
+    background: #f0f0f0;
+    color: #888;
+    font-size: 1.2em;
+    border: 1px solid #ddd;
+    font-style: italic;
+}
+.head-line {
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+}
+.head-line svg {
+    width: 430px;
+}
+.menus {
+    margin-top: 1em;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-top:1px solid #ebebeb;
+    border-bottom:4px double #000;
+}
+
+.menus button {
+    background: none;
+    border: none;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+} 
+
+.menus button:hover {
+    background-color: beige;
+}
+
+.menus button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.menus button.active:hover {
+    background-color: #0056b3;
+}
+.news-img-size {
+    max-width: 100%;
+    max-height: 250px;
+    object-fit: cover;  
+}
+
+.news {
+    border-bottom: 2px solid #000;
+}
+.top-bar {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    position: relative;
+    gap: 8px;
+}
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 8px;
+    z-index: 3000;
+}
+/* 사이드바가 열릴 때 햄버거 버튼 숨김 */
+.side-menu.active ~ .top-bar .hamburger {
+    display: none !important;
+}
+.hamburger span {
+    display: block;
+    height: 4px;
+    width: 28px;
+    background: #222;
+    margin: 5px 0;
+    border-radius: 2px;
+}
+.side-menu {
+    display: none !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100%;
+    background: #fff;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    z-index: 1001;
+    padding: 24px 12px 12px 12px;
+    flex-direction: column;
+    transition: transform 0.3s;
+}
+.side-menu.active {
+    display: flex !important;
+}
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    align-self: flex-end;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+.side-menus {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    z-index: 2000 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    background: #fff !important;
+}
+
+.side-menus button {
+    width: 100%;
+    text-align: left;
+    padding: 10px 8px;
+    border-radius: 4px;
+    font-size: 1.05em;
+    color: #222 !important;
+    background: #fff !important;
+    border: 1px solid #eee !important;
+    z-index: 2001 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: background-color 0.3s ease;
+}
+
+.side-menus button.active {
+    background: #007bff !important;
+    color: white !important;
+    font-weight: bold;
+    border-color: #007bff !important;
+}
+
+.side-menus button.active:hover {
+    background: #0056b3 !important;
+    border-color: #0056b3 !important;
+}
+.search-icon {
+    background: none;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-icon svg {
+    width: 28px;
+    height: 28px;
+}
+.search-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+.search-modal.active {
+    display: flex;
+}
+.search-modal-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 1;
+}
+.search-modal-content {
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px 16px 16px 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.search-modal-input-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#search-input {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.search-modal-btn {
+    background: #007bff;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.search-modal-btn:hover {
+    background: #0056b3;
+}
+#close-search {
+    background: none;
+    border: none;
+    font-size: 1.7rem;
+    cursor: pointer;
+    color: #222;
+    margin-left: 4px;
+}
+@media (max-width: 991px) {
+    .menus {
+        display: none !important;
+    }
+    .hamburger {
+        display: flex;
+    }
+}
+@media (min-width: 992px) {
+    .side-menu {
+        display: none !important;
+    }
+    .hamburger {
+        display: none !important;
+    }
+    .menus {
+        display: flex !important;
+    }
+}
+
+/* 페이지네이션 버튼 스타일 */
+.page-link {
+    background: none;
+    border: none;
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 0.375rem 0.75rem;
+    font-size: inherit;
+    font-family: inherit;
+    pointer-events: auto;
+    position: relative;
+    z-index: 10;
+    outline: none;
+}
+
+.page-link:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.page-link:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.page-item.active .page-link:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.page-item {
+    pointer-events: auto;
+    position: relative;
+}
+
+.pagination {
+    pointer-events: auto;
+}
+
+/* 스크롤 방지를 위한 추가 스타일 */
+.page-link:active {
+    transform: none;
+}
+
+.page-item:active {
+    transform: none;
+}
